@@ -8,10 +8,7 @@ import useRegisterModal from "@/app/hooks/useRegisterModal";
 
 
   
-  const [isOpen,setIsOpen] = useState(false);
-  const toggleOpen = useCallback(() =>{
-    setIsOpen((value)=> !value)
-  },[])
+
 
 const UserMenu = () => {
   const registerModal = useRegisterModal();

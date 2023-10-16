@@ -9,6 +9,8 @@ import useRegisterModal from '@/app/hooks/useRegisterModal';
 import { error } from 'console';
 import Modal from './Modal';
 import Heading from '../Heading';
+import Input from '../inputs/Input';
+
 
 
 const RegisterModal = () => {
@@ -43,11 +45,12 @@ const RegisterModal = () => {
 
     const bodyContent = (
       <div className='flex flex-col gap-4'>
-       <Heading title={''}/>
+       <Heading title="Welcome to Airbnb" subtitle='Create a account'/>
+       <Input/>
       </div>
     )
 
-  return <Modal disabled={isLoading} isOpen={RegisterModal.isOpen} title='Register' onClose={RegisterModal.onClose} onSubmit={handleSubmit(onSubmit)} actionLabel={'Continue'}/>;
+  return <Modal body={bodyContent} disabled={isLoading} isOpen={RegisterModal.isOpen} title='Register' onClose={RegisterModal.onClose} onSubmit={handleSubmit(onSubmit)} actionLabel={'Continue'}/>;
 };
 
 export default RegisterModal;
