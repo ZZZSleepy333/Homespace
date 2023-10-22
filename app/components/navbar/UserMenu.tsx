@@ -12,6 +12,7 @@ import { SafeUser } from "@/app/types";
 
 import MenuItem from "./MenuItem";
 import Avatar from "../Avatar";
+import useRentModal from "@/app/hooks/useRentModal";
 
 interface UserMenuProps {
   currentUser?: SafeUser | null;
@@ -22,17 +23,26 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
 
   const loginModal = useLoginModal();
   const registerModal = useRegisterModal();
-
+  const rentModal = useRentModal();
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleOpen = useCallback(() => {
     setIsOpen((value) => !value);
   }, []);
 
+  const onRent = useCallback(() => {
+    if (!currentUser) {
+      return loginModal.onOpen();
+    }
+
+    rentModal.onOpen();
+  }, [currentUser, loginModal, rentModal]);
+
   return (
     <div className="relative">
       <div className="flex flex-row items-center gap-3">
         <div
+          onClick={onRent}
           className="
             hidden
             md:block
@@ -94,7 +104,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
                 <MenuItem label="My favorites" onClick={() => {}} />
                 <MenuItem label="My reservations" onClick={() => {}} />
                 <MenuItem label="My properties" onClick={() => {}} />
-
+                <MenuItem label="My home" onClick={rentModal.onOpen} />
                 <hr />
                 <MenuItem label="Logout" onClick={() => signOut()} />
               </>

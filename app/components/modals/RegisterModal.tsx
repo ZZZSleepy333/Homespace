@@ -14,9 +14,12 @@ import { toast } from "react-hot-toast";
 import Button from "../Button";
 import { BiLogoFacebook } from "react-icons/bi";
 import { signIn, signOut } from "next-auth/react";
+import LoginModal from "./LoginModal";
+import useLoginModal from "@/app/hooks/useLoginModal";
 
 const RegisterModal = () => {
   const RegisterModal = useRegisterModal();
+  const LoginModal = useLoginModal();
   const [isLoading, setIsLoading] = useState(false);
   const {
     register,
@@ -44,6 +47,11 @@ const RegisterModal = () => {
         setIsLoading(false);
       });
   };
+
+  const toggle = useCallback(() => {
+    RegisterModal.onClose();
+    LoginModal.onOpen();
+  }, [LoginModal, RegisterModal]);
 
   const bodyContent = (
     <div className="flex flex-col gap-4">
