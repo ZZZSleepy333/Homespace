@@ -13,8 +13,8 @@ import SearchModal from "./components/modals/SearchModal";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Airhub",
-  description: "Airhub",
+  title: "Homespace",
+  description: "Homespace",
 };
 
 const font = Nunito({
