@@ -10,6 +10,7 @@ import { safeListings, SafeUser } from "@/app/types";
 import Heading from "@/app/components/Heading";
 import Container from "@/app/components/Container";
 import ListingCard from "@/app/components/listings/ListingCard";
+import useEditModal from "@/app/hooks/useEditModal";
 
 interface PropertiesClientProps {
   listings: safeListings[];
@@ -21,6 +22,7 @@ const PropertiesClient: React.FC<PropertiesClientProps> = ({
   currentUser,
 }) => {
   const router = useRouter();
+  const editModal = useEditModal();
   const [deletingId, setDeletingId] = useState("");
 
   const onDelete = useCallback(
@@ -43,6 +45,13 @@ const PropertiesClient: React.FC<PropertiesClientProps> = ({
     [router]
   );
 
+  const onEdit = useCallback(
+    (id: string) => {
+      editModal.onOpen(id);
+    },
+    [editModal]
+  );
+
   return (
     <Container>
       <Heading title="Properties" subtitle="List of your properties" />
@@ -60,15 +69,27 @@ const PropertiesClient: React.FC<PropertiesClientProps> = ({
         "
       >
         {listings.map((listing: any) => (
-          <ListingCard
-            key={listing.id}
-            data={listing}
-            actionId={listing.id}
-            onAction={onDelete}
-            disabled={deletingId === listing.id}
-            actionLabel="Delete property"
-            currentUser={currentUser}
-          />
+          <div key={listing.id} className="col-span-1">
+            <ListingCard
+              data={listing}
+              actionId={listing.id}
+              onAction={onEdit}
+              disabled={false}
+              actionLabel="Edit property"
+              currentUser={currentUser}
+            />
+            <div className="mt-2">
+              <ListingCard
+                data={listing}
+                actionId={listing.id}
+                onAction={onDelete}
+                disabled={deletingId === listing.id}
+                actionLabel="Delete property"
+                currentUser={currentUser}
+                small
+              />
+            </div>
+          </div>
         ))}
       </div>
     </Container>

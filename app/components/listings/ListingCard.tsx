@@ -20,6 +20,7 @@ interface ListingCardProps {
   actionLabel?: string;
   actionId?: string;
   currentUser?: SafeUser | null;
+  small?: boolean;
 }
 
 const ListingCard: React.FC<ListingCardProps> = ({
@@ -30,6 +31,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
   actionLabel,
   actionId = "",
   currentUser,
+  small,
 }) => {
   const router = useRouter();
   const { getByValue } = useCountries();
@@ -70,8 +72,8 @@ const ListingCard: React.FC<ListingCardProps> = ({
 
   return (
     <div
-      onClick={() => router.push(`/listings/${data.id}`)}
-      className="col-span-1 cursor-pointer group"
+      onClick={() => !small && router.push(`/listings/${data.id}`)}
+      className={`col-span-1 cursor-pointer group ${small ? "opacity-90" : ""}`}
     >
       <div className="flex flex-col gap-2 w-full">
         <div

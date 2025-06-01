@@ -27,6 +27,8 @@ interface ListingInfoProps {
       }
     | undefined;
   locationValue: string;
+  exactLocation?: string;
+  amenities?: string[];
 }
 
 const ListingInfo: React.FC<ListingInfoProps> = ({
@@ -37,6 +39,8 @@ const ListingInfo: React.FC<ListingInfoProps> = ({
   bathroomCount,
   category,
   locationValue,
+  exactLocation,
+  amenities,
 }) => {
   const { getByValue } = useCountries();
 
@@ -89,7 +93,33 @@ const ListingInfo: React.FC<ListingInfoProps> = ({
         {description}
       </div>
       <hr />
-      <Map center={coordinates} />
+      {amenities && amenities.length > 0 && (
+        <>
+          <div className="flex flex-col gap-2">
+            <div className="text-xl font-semibold">Amenities</div>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2 mt-2">
+              {amenities.map((amenity) => (
+                <div
+                  key={amenity}
+                  className="flex items-center gap-2 p-2 rounded-md bg-neutral-100"
+                >
+                  <div className="font-medium">{amenity}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <hr />
+        </>
+      )}
+      <div className="flex flex-col gap-2">
+        <div className="text-xl font-semibold">Location</div>
+        {exactLocation && (
+          <div className="text-lg font-light text-neutral-500 mb-2">
+            {exactLocation}
+          </div>
+        )}
+        <Map center={coordinates} />
+      </div>
     </div>
   );
 };

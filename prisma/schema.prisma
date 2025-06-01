@@ -56,8 +56,10 @@ model Listing {
   bathroomCount Int
   guestCount    Int
   locationValue String
+  exactLocation String?
   userId        String   @db.ObjectId
   price         Int
+  amenities     String[]
 
   user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   reservations Reservation[]

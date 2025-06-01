@@ -5,9 +5,9 @@ import { toast } from "react-hot-toast";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
-import useRentModal from "@/app/hooks/useRentModal";
+import useEditModal from "@/app/hooks/useEditModal";
 
 import Modal from "./Modal";
 import Counter from "../inputs/Counter";
@@ -20,16 +20,31 @@ import Heading from "../Heading";
 
 enum STEPS {
   CATEGORY = 0,
-  IMAGES = 1,
-  INFO = 2,
+  LOCATION = 1,
+  IMAGES = 2,
+  INFO = 3,
 }
 
-const RentModal = () => {
+interface Listing {
+  id: string;
+  title: string;
+  description: string;
+  imageSrc: string;
+  category: string;
+  roomCount: number;
+  bathroomCount: number;
+  guestCount: number;
+  locationValue: string;
+  price: number;
+}
+
+const EditModal = () => {
   const router = useRouter();
-  const rentModal = useRentModal();
+  const editModal = useEditModal();
 
   const [isLoading, setIsLoading] = useState(false);
   const [step, setStep] = useState(STEPS.CATEGORY);
+  const [listing, setListing] = useState<Listing | null>(null);
 
   const {
     register,
@@ -41,7 +56,7 @@ const RentModal = () => {
   } = useForm<FieldValues>({
     defaultValues: {
       category: "",
-      locationValue: "",
+      location: null,
       exactLocation: "",
       guestCount: 1,
       roomCount: 1,
@@ -54,14 +69,52 @@ const RentModal = () => {
     },
   });
 
+  // Fetch listing data when modal opens
+  useEffect(() => {
+    if (editModal.listingId) {
+      setIsLoading(true);
+      axios
+        .get(`/api/listings/${editModal.listingId}`)
+        .then((response) => {
+          const listingData = response.data;
+          setListing(listingData);
+
+          // Set form values from listing data
+          setValue("category", listingData.category);
+          setValue("location", {
+            value: listingData.locationValue,
+            label: listingData.locationValue,
+            latlng: [0, 0], // You might need to adjust this based on your data structure
+            region: "",
+            flag: "",
+          });
+          setValue("exactLocation", listingData.exactLocation || "");
+          setValue("guestCount", listingData.guestCount);
+          setValue("roomCount", listingData.roomCount);
+          setValue("bathroomCount", listingData.bathroomCount);
+          setValue("imageSrc", listingData.imageSrc);
+          setValue("price", listingData.price);
+          setValue("title", listingData.title);
+          setValue("description", listingData.description);
+          setValue("amenities", listingData.amenities || []);
+        })
+        .catch((error) => {
+          toast.error("Something went wrong");
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    }
+  }, [editModal.listingId, setValue]);
+
   const location = watch("location");
-  const exactLocation = watch("exactLocation");
   const category = watch("category");
   const guestCount = watch("guestCount");
   const roomCount = watch("roomCount");
   const bathroomCount = watch("bathroomCount");
   const imageSrc = watch("imageSrc");
   const amenities = watch("amenities");
+  const exactLocation = watch("exactLocation");
 
   const Map = useMemo(
     () =>
@@ -92,16 +145,21 @@ const RentModal = () => {
       return onNext();
     }
 
+    // Make sure amenities is an array
+    if (!data.amenities) {
+      data.amenities = [];
+    }
+
     setIsLoading(true);
 
     axios
-      .post("/api/listings", data)
+      .put(`/api/listings/${editModal.listingId}`, data)
       .then(() => {
-        toast.success("Listing created!");
+        toast.success("Listing updated!");
         router.refresh();
         reset();
         setStep(STEPS.CATEGORY);
-        rentModal.onClose();
+        editModal.onClose();
       })
       .catch(() => {
         toast.error("Something went wrong.");
@@ -113,7 +171,7 @@ const RentModal = () => {
 
   const actionLabel = useMemo(() => {
     if (step === STEPS.INFO) {
-      return "Create";
+      return "Update";
     }
 
     return "Next";
@@ -157,7 +215,21 @@ const RentModal = () => {
     </div>
   );
 
-  // Location step removed
+  if (step === STEPS.LOCATION) {
+    bodyContent = (
+      <div className="flex flex-col gap-8">
+        <Heading
+          title="Where is your place located?"
+          subtitle="Help guests find you!"
+        />
+        <CountrySelect
+          value={location}
+          onChange={(value) => setCustomValue("location", value)}
+        />
+        <Map center={location?.latlng} />
+      </div>
+    );
+  }
 
   if (step === STEPS.IMAGES) {
     bodyContent = (
@@ -312,16 +384,16 @@ const RentModal = () => {
   return (
     <Modal
       disabled={isLoading}
-      isOpen={rentModal.isOpen}
-      title="Airbnb your home!"
+      isOpen={editModal.isOpen}
+      title="Edit your listing"
       actionLabel={actionLabel}
       onSubmit={handleSubmit(onSubmit)}
       secondaryActionLabel={secondaryActionLabel}
       secondaryAction={step === STEPS.CATEGORY ? undefined : onBack}
-      onClose={rentModal.onClose}
+      onClose={editModal.onClose}
       body={bodyContent}
     />
   );
 };
 
-export default RentModal;
+export default EditModal;

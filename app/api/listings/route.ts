@@ -20,7 +20,9 @@ export async function POST(request: Request) {
     bathroomCount,
     guestCount,
     location,
+    exactLocation,
     price,
+    amenities,
   } = body;
 
   Object.keys(body).forEach((value: any) => {
@@ -39,8 +41,10 @@ export async function POST(request: Request) {
       bathroomCount,
       guestCount,
       locationValue: location.value,
+      exactLocation,
       price: parseInt(price, 10),
       userId: currentUser.id,
+      amenities: amenities || [],
     },
   });
 
