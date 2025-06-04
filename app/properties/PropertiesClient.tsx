@@ -75,20 +75,12 @@ const PropertiesClient: React.FC<PropertiesClientProps> = ({
               actionId={listing.id}
               onAction={onEdit}
               disabled={false}
-              actionLabel="Edit property"
+              actionLabel="Edit"
               currentUser={currentUser}
+              secondaryAction={onDelete}
+              secondaryActionLabel="Delete"
+              secondaryActionDisabled={deletingId === listing.id}
             />
-            <div className="mt-2">
-              <ListingCard
-                data={listing}
-                actionId={listing.id}
-                onAction={onDelete}
-                disabled={deletingId === listing.id}
-                actionLabel="Delete property"
-                currentUser={currentUser}
-                small
-              />
-            </div>
           </div>
         ))}
       </div>

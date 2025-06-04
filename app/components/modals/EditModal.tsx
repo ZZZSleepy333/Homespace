@@ -29,7 +29,7 @@ interface Listing {
   id: string;
   title: string;
   description: string;
-  imageSrc: string;
+  imageSrc: string[];
   category: string;
   roomCount: number;
   bathroomCount: number;
@@ -57,11 +57,10 @@ const EditModal = () => {
     defaultValues: {
       category: "",
       location: null,
-      exactLocation: "",
       guestCount: 1,
       roomCount: 1,
       bathroomCount: 1,
-      imageSrc: "",
+      imageSrc: [],
       price: 1,
       title: "",
       description: "",
@@ -84,11 +83,10 @@ const EditModal = () => {
           setValue("location", {
             value: listingData.locationValue,
             label: listingData.locationValue,
-            latlng: [0, 0], // You might need to adjust this based on your data structure
+            latlng: [0, 0],
             region: "",
             flag: "",
           });
-          setValue("exactLocation", listingData.exactLocation || "");
           setValue("guestCount", listingData.guestCount);
           setValue("roomCount", listingData.roomCount);
           setValue("bathroomCount", listingData.bathroomCount);
@@ -114,7 +112,6 @@ const EditModal = () => {
   const bathroomCount = watch("bathroomCount");
   const imageSrc = watch("imageSrc");
   const amenities = watch("amenities");
-  const exactLocation = watch("exactLocation");
 
   const Map = useMemo(
     () =>
@@ -283,18 +280,13 @@ const EditModal = () => {
         <div className="flex flex-col gap-4 mt-6">
           <h2 className="font-semibold text-lg">Location</h2>
           <Input
-            id="exactLocation"
-            label="Exact Location"
+            id="location"
+            label="Location"
             disabled={isLoading}
             register={register}
             errors={errors}
             required
           />
-          <CountrySelect
-            value={location}
-            onChange={(value) => setCustomValue("location", value)}
-          />
-          <Map center={location?.latlng} />
         </div>
 
         {/* Amenities Section */}

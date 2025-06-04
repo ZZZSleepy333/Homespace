@@ -21,6 +21,9 @@ interface ListingCardProps {
   actionId?: string;
   currentUser?: SafeUser | null;
   small?: boolean;
+  secondaryAction?: (id: string) => void;
+  secondaryActionLabel?: string;
+  secondaryActionDisabled?: boolean;
 }
 
 const ListingCard: React.FC<ListingCardProps> = ({
@@ -32,6 +35,9 @@ const ListingCard: React.FC<ListingCardProps> = ({
   actionId = "",
   currentUser,
   small,
+  secondaryAction,
+  secondaryActionLabel,
+  secondaryActionDisabled,
 }) => {
   const router = useRouter();
   const { getByValue } = useCountries();
@@ -49,6 +55,19 @@ const ListingCard: React.FC<ListingCardProps> = ({
       onAction?.(actionId);
     },
     [disabled, onAction, actionId]
+  );
+
+  const handleSecondaryAction = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.stopPropagation();
+
+      if (disabled || secondaryActionDisabled) {
+        return;
+      }
+
+      secondaryAction?.(actionId);
+    },
+    [disabled, secondaryAction, actionId, secondaryActionDisabled]
   );
 
   const price = useMemo(() => {
@@ -94,7 +113,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
               group-hover:scale-110 
               transition
             "
-            src={data.imageSrc}
+            src={Array.isArray(data.imageSrc) ? data.imageSrc[0] : data.imageSrc}
             alt="Listing"
           />
           <div
@@ -108,7 +127,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
           </div>
         </div>
         <div className="font-semibold text-lg">
-          {location?.region}, {location?.label}
+          {location?.label}
         </div>
         <div className="font-light text-neutral-500">
           {reservationDate || data.category}
@@ -117,14 +136,24 @@ const ListingCard: React.FC<ListingCardProps> = ({
           <div className="font-semibold">$ {price}</div>
           {!reservation && <div className="font-light">night</div>}
         </div>
-        {onAction && actionLabel && (
-          <Button
-            disabled={disabled}
-            small
-            label={actionLabel}
-            onClick={handleCancel}
-          />
-        )}
+        <div className="flex flex-row gap-2">
+          {onAction && actionLabel && (
+            <Button
+              disabled={disabled}
+              small
+              label={actionLabel}
+              onClick={handleCancel}
+            />
+          )}
+          {secondaryAction && secondaryActionLabel && (
+            <Button
+              disabled={secondaryActionDisabled}
+              small
+              label={secondaryActionLabel}
+              onClick={handleSecondaryAction}
+            />
+          )}
+        </div>
       </div>
     </div>
   );

@@ -24,6 +24,7 @@ export default async function getListingById(params: IParams) {
     return {
       ...listing,
       createdAt: listing.createdAt.toString(),
+      imageSrc: Array.isArray(listing.imageSrc) ? listing.imageSrc : [listing.imageSrc],
       user: {
         ...listing.user,
         createdAt: listing.user.createdAt.toString(),

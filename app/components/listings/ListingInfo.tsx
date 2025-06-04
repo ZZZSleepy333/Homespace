@@ -1,19 +1,12 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import { IconType } from "react-icons";
-
-import useCountries from "@/app/hooks/useCountries";
 import { SafeUser } from "@/app/types";
-
 import Avatar from "../Avatar";
 import ListingCategory from "./ListingCategory";
 
-const Map = dynamic(() => import("../Map"), {
-  ssr: false,
-});
-
 interface ListingInfoProps {
+  title: string;
   user: SafeUser;
   description: string;
   guestCount: number;
@@ -27,11 +20,11 @@ interface ListingInfoProps {
       }
     | undefined;
   locationValue: string;
-  exactLocation?: string;
   amenities?: string[];
 }
 
 const ListingInfo: React.FC<ListingInfoProps> = ({
+  title,
   user,
   description,
   guestCount,
@@ -39,16 +32,12 @@ const ListingInfo: React.FC<ListingInfoProps> = ({
   bathroomCount,
   category,
   locationValue,
-  exactLocation,
   amenities,
 }) => {
-  const { getByValue } = useCountries();
-
-  const coordinates = getByValue(locationValue)?.latlng;
-
   return (
     <div className="col-span-4 flex flex-col gap-8">
       <div className="flex flex-col gap-2">
+        <div className="text-2xl font-bold">{title}</div>
         <div
           className="
             text-xl 
@@ -113,12 +102,9 @@ const ListingInfo: React.FC<ListingInfoProps> = ({
       )}
       <div className="flex flex-col gap-2">
         <div className="text-xl font-semibold">Location</div>
-        {exactLocation && (
-          <div className="text-lg font-light text-neutral-500 mb-2">
-            {exactLocation}
-          </div>
-        )}
-        <Map center={coordinates} />
+        <div className="text-lg font-light text-neutral-500">
+          {locationValue}
+        </div>
       </div>
     </div>
   );

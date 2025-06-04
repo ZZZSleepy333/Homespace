@@ -12,7 +12,6 @@ import useRentModal from "@/app/hooks/useRentModal";
 import Modal from "./Modal";
 import Counter from "../inputs/Counter";
 import CategoryInput from "../inputs/CategoryInput";
-import CountrySelect from "../inputs/CountrySelect";
 import { categories } from "../navbar/Categories";
 import ImageUpload from "../inputs/ImageUpload";
 import Input from "../inputs/Input";
@@ -41,12 +40,11 @@ const RentModal = () => {
   } = useForm<FieldValues>({
     defaultValues: {
       category: "",
-      locationValue: "",
-      exactLocation: "",
+      location: "",
       guestCount: 1,
       roomCount: 1,
       bathroomCount: 1,
-      imageSrc: "",
+      imageSrc: [],
       price: 1,
       title: "",
       description: "",
@@ -55,7 +53,6 @@ const RentModal = () => {
   });
 
   const location = watch("location");
-  const exactLocation = watch("exactLocation");
   const category = watch("category");
   const guestCount = watch("guestCount");
   const roomCount = watch("roomCount");
@@ -128,7 +125,7 @@ const RentModal = () => {
   }, [step]);
 
   let bodyContent = (
-    <div className="flex flex-col gap-8">
+    <div className="flex flex-col gap-8 z-10">
       <Heading
         title="Which of these best describes your place?"
         subtitle="Pick a category"
@@ -163,8 +160,8 @@ const RentModal = () => {
     bodyContent = (
       <div className="flex flex-col gap-8">
         <Heading
-          title="Add a photo of your place"
-          subtitle="Show guests what your place looks like!"
+          title="Add photos of your place"
+          subtitle="Show guests what your place looks like! (Max 10 photos)"
         />
         <ImageUpload
           onChange={(value) => setCustomValue("imageSrc", value)}
@@ -211,18 +208,13 @@ const RentModal = () => {
         <div className="flex flex-col gap-4 mt-6">
           <h2 className="font-semibold text-lg">Location</h2>
           <Input
-            id="exactLocation"
-            label="Exact Location"
+            id="location"
+            label="Location"
             disabled={isLoading}
             register={register}
             errors={errors}
             required
           />
-          <CountrySelect
-            value={location}
-            onChange={(value) => setCustomValue("location", value)}
-          />
-          <Map center={location?.latlng} />
         </div>
 
         {/* Amenities Section */}
@@ -281,14 +273,30 @@ const RentModal = () => {
             required
           />
           <hr />
-          <Input
+          <textarea
             id="description"
-            label="Description"
+            {...register("description", { required: true })}
+            className="
+              w-full
+              p-4
+              font-light
+              bg-white
+              border-2
+              rounded-md
+              outline-none
+              transition
+              disabled:opacity-70
+              disabled:cursor-not-allowed
+              pl-4
+              pt-4
+              min-h-[150px]
+            "
+            placeholder="Description"
             disabled={isLoading}
-            register={register}
-            errors={errors}
-            required
           />
+          {errors.description && (
+            <span className="text-rose-500">This field is required</span>
+          )}
         </div>
 
         {/* Price Section */}
@@ -303,6 +311,7 @@ const RentModal = () => {
             register={register}
             errors={errors}
             required
+            
           />
         </div>
       </div>

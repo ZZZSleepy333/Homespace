@@ -82,10 +82,18 @@ export default async function getListings(params: IListingsParams) {
       },
     });
 
-    const safeListings = listings.map((listing) => ({
-      ...listing,
-      createdAt: listing.createdAt.toISOString(),
-    }));
+    const safeListings = listings.map((listing) => {
+      // Convert imageSrc to array if it's a string
+      const imageSrc = typeof listing.imageSrc === 'string' 
+        ? [listing.imageSrc]
+        : listing.imageSrc;
+
+      return {
+        ...listing,
+        createdAt: listing.createdAt.toISOString(),
+        imageSrc,
+      };
+    });
 
     return safeListings;
   } catch (error: any) {
