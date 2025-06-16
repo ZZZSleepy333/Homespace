@@ -83,7 +83,7 @@ export default async function getListings(params: IListingsParams) {
     });
 
     const safeListings = listings.map((listing) => {
-      // Convert imageSrc to array if it's a string
+     
       const imageSrc = typeof listing.imageSrc === 'string' 
         ? [listing.imageSrc]
         : listing.imageSrc;

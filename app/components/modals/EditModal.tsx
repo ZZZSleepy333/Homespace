@@ -251,7 +251,6 @@ const EditModal = () => {
           subtitle="What amenities do you have and how would you describe it?"
         />
 
-        {/* Basic Info Section */}
         <div className="flex flex-col gap-4">
           <h2 className="font-semibold text-lg">Basic Information</h2>
           <Counter
@@ -276,7 +275,6 @@ const EditModal = () => {
           />
         </div>
 
-        {/* Location Section */}
         <div className="flex flex-col gap-4 mt-6">
           <h2 className="font-semibold text-lg">Location</h2>
           <Input
@@ -289,7 +287,6 @@ const EditModal = () => {
           />
         </div>
 
-        {/* Amenities Section */}
         <div className="flex flex-col gap-4 mt-6">
           <h2 className="font-semibold text-lg">Amenities</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -333,7 +330,6 @@ const EditModal = () => {
           </div>
         </div>
 
-        {/* Description Section */}
         <div className="flex flex-col gap-4 mt-6">
           <h2 className="font-semibold text-lg">Description</h2>
           <Input
@@ -355,7 +351,6 @@ const EditModal = () => {
           />
         </div>
 
-        {/* Price Section */}
         <div className="flex flex-col gap-4 mt-6">
           <h2 className="font-semibold text-lg">Price</h2>
           <Input

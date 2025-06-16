@@ -35,7 +35,9 @@ const ListingHead: React.FC<ListingHeadProps> = ({
   const { getByValue } = useCountries();
   const location = getByValue(locationValue);
 
-  const category = categories.find((items: any) => items.label === locationValue);
+  const category = categories.find(
+    (items: any) => items.label === locationValue
+  );
 
   const onDelete = useCallback(() => {
     setIsLoading(true);
@@ -57,36 +59,31 @@ const ListingHead: React.FC<ListingHeadProps> = ({
 
   return (
     <>
-      
-        <div className="w-full h-full">
-          <div className="flex flex-col gap-6">
-            <div className="flex flex-row justify-between items-center"> 
-              <Heading title={title} subtitle={`${locationValue}`} />
-              <div className="  top-5 right-5">
+      <div className="w-full h-full">
+        <div className="flex flex-col gap-6">
+          <div className="flex flex-row justify-between items-center">
+            <Heading title={title} subtitle={`${locationValue}`} />
+            <div className="  top-5 right-5">
               <HeartButton listingId={id} currentUser={currentUser} />
-              </div>
             </div>
-          
-            <div className="w-full h-[60vh] overflow-x-auto">
-              <div className="flex h-full">
-                {imageSrc.map((src, index) => (
-                  <div key={index} className="relative min-w-full h-full">
-                    <Image
-                      src={src}
-                      fill
-                      className="object-cover"
-                      alt={`Image ${index + 1}`}
-                    />
-                     
-                      
-                    
-                  </div>
-                ))}
-              </div>
+          </div>
+
+          <div className="w-full h-[60vh] overflow-x-auto">
+            <div className="flex h-full">
+              {imageSrc.map((src, index) => (
+                <div key={index} className="relative min-w-full h-full">
+                  <Image
+                    src={src}
+                    fill
+                    className="object-cover"
+                    alt={`Image ${index + 1}`}
+                  />
+                </div>
+              ))}
             </div>
           </div>
         </div>
-    
+      </div>
     </>
   );
 };

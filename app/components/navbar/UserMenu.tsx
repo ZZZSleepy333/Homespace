@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import useLoginModal from "@/app/hooks/useLoginModal";
 import useRegisterModal from "@/app/hooks/useRegisterModal";
 import useRentModal from "@/app/hooks/useRentModal";
+import useChatModal from "@/app/hooks/useChatModal";
 import { SafeUser } from "@/app/types";
 
 import MenuItem from "./MenuItem";
@@ -23,6 +24,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
   const loginModal = useLoginModal();
   const registerModal = useRegisterModal();
   const rentModal = useRentModal();
+  const chatModal = useChatModal();
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -37,6 +39,14 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
 
     rentModal.onOpen();
   }, [loginModal, rentModal, currentUser]);
+
+  const onMessages = useCallback(() => {
+    if (!currentUser) {
+      return loginModal.onOpen();
+    }
+
+    chatModal.onOpen();
+  }, [loginModal, chatModal, currentUser]);
 
   return (
     <div className="relative">
@@ -108,6 +118,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ currentUser }) => {
                   label="My favorites"
                   onClick={() => router.push("/favorites")}
                 />
+                <MenuItem label="Messages" onClick={onMessages} />
                 <MenuItem
                   label="My reservations"
                   onClick={() => router.push("/reservations")}

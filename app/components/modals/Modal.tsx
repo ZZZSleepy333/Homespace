@@ -16,6 +16,7 @@ interface ModalProps {
   disabled?: boolean;
   secondaryAction?: () => void;
   secondaryActionLabel?: string;
+  large?: boolean;
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -29,6 +30,7 @@ const Modal: React.FC<ModalProps> = ({
   disabled,
   secondaryAction,
   secondaryActionLabel,
+  large = false,
 }) => {
   const [showModal, setShowModal] = useState(isOpen);
 
@@ -85,28 +87,16 @@ const Modal: React.FC<ModalProps> = ({
         "
       >
         <div
-          className="
-          relative 
-          w-full
-          md:w-4/6
-          lg:w-3/6
-          xl:w-2/5
-          my-6
-          mx-auto 
-          h-full 
-          lg:h-auto
-          md:h-auto
-          "
+          className={`relative w-full ${
+            large
+              ? "md:w-5/6 lg:w-4/5 xl:w-3/4 2xl:w-2/3"
+              : "md:w-4/6 lg:w-3/6 xl:w-2/5"
+          } my-6 mx-auto h-full lg:h-auto md:h-auto`}
         >
-          {/*content*/}
           <div
-            className={`
-            translate
-            duration-300
-            h-full
-            ${showModal ? "translate-y-0" : "translate-y-full"}
-            ${showModal ? "opacity-100" : "opacity-0"}
-          `}
+            className={`translate duration-300 h-full ${
+              showModal ? "translate-y-0" : "translate-y-full"
+            } ${showModal ? "opacity-100" : "opacity-0"}`}
           >
             <div
               className="
@@ -126,7 +116,6 @@ const Modal: React.FC<ModalProps> = ({
               focus:outline-none
             "
             >
-              {/*header*/}
               <div
                 className="
                 flex 
@@ -153,9 +142,9 @@ const Modal: React.FC<ModalProps> = ({
                 </button>
                 <div className="text-lg font-semibold">{title}</div>
               </div>
-              {/*body*/}
+
               <div className="relative p-6 flex-auto">{body}</div>
-              {/*footer*/}
+
               <div className="flex flex-col gap-2 p-6">
                 <div
                   className="

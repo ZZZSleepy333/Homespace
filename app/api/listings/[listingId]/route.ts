@@ -86,7 +86,7 @@ export async function PUT(request: Request, { params }: { params: IParams }) {
       );
     }
 
-    // Validate required fields
+    
     if (!title || !description || !category || !roomCount || 
         !bathroomCount || !guestCount || !location || !price) {
       return NextResponse.json(
@@ -95,7 +95,7 @@ export async function PUT(request: Request, { params }: { params: IParams }) {
       );
     }
 
-    // Ensure imageSrc is an array of strings
+   
     if (!Array.isArray(imageSrc) || !imageSrc.every(url => typeof url === 'string')) {
       return NextResponse.json(
         { error: "imageSrc must be an array of strings" },
@@ -103,7 +103,7 @@ export async function PUT(request: Request, { params }: { params: IParams }) {
       );
     }
 
-    // Validate imageSrc array length
+
     if (imageSrc.length === 0) {
       return NextResponse.json(
         { error: "At least one image is required" },
@@ -118,7 +118,7 @@ export async function PUT(request: Request, { params }: { params: IParams }) {
       );
     }
 
-    // Check if the listing exists and belongs to the current user
+
     const existingListing = await prisma.listing.findFirst({
       where: {
         id: listingId,

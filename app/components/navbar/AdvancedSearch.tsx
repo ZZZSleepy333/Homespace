@@ -1,9 +1,9 @@
 "use client";
 
-import { useSearchParams, useRouter } from 'next/navigation';
-import { useMemo, useState, useCallback } from 'react';
-import { BiSearch, BiFilterAlt } from 'react-icons/bi';
-import { differenceInDays } from 'date-fns';
+import { useSearchParams, useRouter } from "next/navigation";
+import { useMemo, useState, useCallback } from "react";
+import { BiSearch, BiFilterAlt } from "react-icons/bi";
+import { differenceInDays } from "date-fns";
 import { TbBeach, TbMountain, TbPool } from "react-icons/tb";
 import {
   GiBarn,
@@ -20,11 +20,11 @@ import { BsSnow } from "react-icons/bs";
 import { IoDiamond } from "react-icons/io5";
 import { MdOutlineVilla } from "react-icons/md";
 
-import useSearchModal from '@/app/hooks/useSearchModal';
-import useCountries from '@/app/hooks/useCountries';
-import Container from '../Container';
-import CategoryBox from '../CategoryBox';
-import SearchInput from '../inputs/SearchInput';
+import useSearchModal from "@/app/hooks/useSearchModal";
+import useCountries from "@/app/hooks/useCountries";
+import Container from "../Container";
+import CategoryBox from "../CategoryBox";
+import SearchInput from "../inputs/SearchInput";
 
 export const categories = [
   {
@@ -132,20 +132,20 @@ const AdvancedSearch = () => {
   const params = useSearchParams();
   const { getByValue } = useCountries();
   const [showFilters, setShowFilters] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const locationValue = params?.get('locationValue'); 
-  const startDate = params?.get('startDate');
-  const endDate = params?.get('endDate');
-  const guestCount = params?.get('guestCount');
-  const category = params?.get('category');
-  const selectedAmenities = params?.get('amenities')?.split(',') || [];
+  const locationValue = params?.get("locationValue");
+  const startDate = params?.get("startDate");
+  const endDate = params?.get("endDate");
+  const guestCount = params?.get("guestCount");
+  const category = params?.get("category");
+  const selectedAmenities = params?.get("amenities")?.split(",") || [];
 
   const locationLabel = useMemo(() => {
     if (locationValue) {
       return getByValue(locationValue as string)?.label;
     }
-    return 'Anywhere';
+    return "Anywhere";
   }, [locationValue, getByValue]);
 
   const durationLabel = useMemo(() => {
@@ -160,30 +160,30 @@ const AdvancedSearch = () => {
 
       return `${diff} Days`;
     }
-    return 'Any Week'
+    return "Any Week";
   }, [startDate, endDate]);
 
   const guestLabel = useMemo(() => {
     if (guestCount) {
       return `${guestCount} Guests`;
     }
-    return 'Add Guests';
+    return "Add Guests";
   }, [guestCount]);
 
   const handleSearch = useCallback(() => {
     if (params) {
       const searchParams = new URLSearchParams(params.toString());
       if (searchQuery) {
-        searchParams.set('query', searchQuery);
+        searchParams.set("query", searchQuery);
       } else {
-        searchParams.delete('query');
+        searchParams.delete("query");
       }
       router.push(`/?${searchParams.toString()}`);
     }
   }, [searchQuery, params, router]);
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       handleSearch();
     }
   };
@@ -191,14 +191,15 @@ const AdvancedSearch = () => {
   return (
     <Container>
       <div className="flex flex-col gap-4 mt-4">
-        {/* Search Bar */}
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1 -z-20">
             <SearchInput
               id="search"
               label="Search by name or location"
               value={searchQuery}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setSearchQuery(e.target.value)
+              }
               onKeyPress={handleKeyPress}
             />
           </div>
@@ -212,16 +213,17 @@ const AdvancedSearch = () => {
               "
             >
               <BiFilterAlt size={20} />
-              {showFilters ? 'Hide Filters' : 'Show Filters'}
+              {showFilters ? "Hide Filters" : "Show Filters"}
             </button>
           </div>
         </div>
 
         {showFilters && (
           <div className="flex flex-col gap-6 p-4 bg-white rounded-lg shadow-md absolute w-full z-50">
-            {/* Categories */}
             <div className="flex flex-col gap-3">
-              <h3 className="text-lg font-semibold text-gray-800">Categories</h3>
+              <h3 className="text-lg font-semibold text-gray-800">
+                Categories
+              </h3>
               <div className="flex flex-row items-center justify-start overflow-x-auto gap-2 pb-2">
                 {categories.map((item) => (
                   <CategoryBox
@@ -234,7 +236,6 @@ const AdvancedSearch = () => {
               </div>
             </div>
 
-            {/* Amenities */}
             <div className="flex flex-col gap-3">
               <h3 className="text-lg font-semibold text-gray-800">Amenities</h3>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
@@ -244,19 +245,22 @@ const AdvancedSearch = () => {
                     className={`
                       flex items-center gap-2 p-3 rounded-lg cursor-pointer
                       transition-all duration-200
-                      ${selectedAmenities.includes(amenity) 
-                        ? 'bg-rose-500 text-white shadow-md' 
-                        : 'bg-gray-50 hover:bg-gray-100 hover:shadow-sm'
+                      ${
+                        selectedAmenities.includes(amenity)
+                          ? "bg-rose-500 text-white shadow-md"
+                          : "bg-gray-50 hover:bg-gray-100 hover:shadow-sm"
                       }
                     `}
                     onClick={() => {
                       const newAmenities = selectedAmenities.includes(amenity)
-                        ? selectedAmenities.filter(a => a !== amenity)
+                        ? selectedAmenities.filter((a) => a !== amenity)
                         : [...selectedAmenities, amenity];
-                      
+
                       if (params) {
-                        const searchParams = new URLSearchParams(params.toString());
-                        searchParams.set('amenities', newAmenities.join(','));
+                        const searchParams = new URLSearchParams(
+                          params.toString()
+                        );
+                        searchParams.set("amenities", newAmenities.join(","));
                         router.push(`/?${searchParams.toString()}`);
                       }
                     }}
@@ -273,4 +277,4 @@ const AdvancedSearch = () => {
   );
 };
 
-export default AdvancedSearch; 
+export default AdvancedSearch;

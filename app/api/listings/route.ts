@@ -28,7 +28,7 @@ export async function POST(request: Request) {
       amenities,
     } = body;
 
-    // Validate required fields
+  
     if (!title || !description || !category || !roomCount || 
         !bathroomCount || !guestCount || !location || !price) {
       return NextResponse.json(
@@ -37,7 +37,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // Ensure imageSrc is an array of strings
+  
     if (!Array.isArray(imageSrc) || !imageSrc.every(url => typeof url === 'string')) {
       return NextResponse.json(
         { error: "imageSrc must be an array of strings" },
@@ -45,7 +45,7 @@ export async function POST(request: Request) {
       );
     }
 
-    // Validate imageSrc array length
+
     if (imageSrc.length === 0) {
       return NextResponse.json(
         { error: "At least one image is required" },

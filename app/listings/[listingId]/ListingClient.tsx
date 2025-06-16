@@ -65,26 +65,21 @@ const ListingClient: React.FC<ListingClientProps> = ({
     if (!currentUser) {
       return loginModal.onOpen();
     }
-    setIsLoading(true);
 
-    axios
-      .post("/api/reservations", {
-        totalPrice,
-        startDate: dateRange.startDate,
-        endDate: dateRange.endDate,
-        listingId: listing?.id,
-      })
-      .then(() => {
-        toast.success("Listing reserved!");
-        setDateRange(initialDateRange);
-        router.push("/trips");
-      })
-      .catch(() => {
-        toast.error("Something went wrong.");
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+    if (!dateRange.startDate || !dateRange.endDate) {
+      toast.error("Please select your check-in and check-out dates");
+      return;
+    }
+
+    // Redirect to payment page with booking details
+    const searchParams = new URLSearchParams({
+      listingId: listing?.id || "",
+      startDate: dateRange.startDate.toISOString(),
+      endDate: dateRange.endDate.toISOString(),
+      totalPrice: totalPrice.toString(),
+    });
+
+    router.push(`/payment?${searchParams.toString()}`);
   }, [totalPrice, dateRange, listing?.id, router, currentUser, loginModal]);
 
   useEffect(() => {
