@@ -65,6 +65,7 @@ export async function POST(request: Request) {
       data: {
         content,
         senderId: currentUser.id,
+        userId: currentUser.id,
         conversationId: conversation.id,
       },
       include: {
