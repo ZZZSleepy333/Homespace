@@ -7,7 +7,7 @@ const nextConfig = {
       "images.unsplash.com",
     ],
   },
-  output: "standalone",
+
   webpack: (config, { isServer }) => {
     if (!isServer) {
       config.resolve.fallback = {
