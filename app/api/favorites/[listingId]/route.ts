@@ -11,7 +11,10 @@ export async function POST(request: Request, { params }: { params: IParams }) {
   const currentUser = await getCurrentUser();
 
   if (!currentUser) {
-    return NextResponse.error();
+    return NextResponse.json(
+      { message: "An error occurred." },
+      { status: 500 }
+    );
   }
 
   const { listingId } = params;
@@ -43,7 +46,10 @@ export async function DELETE(
   const currentUser = await getCurrentUser();
 
   if (!currentUser) {
-    return NextResponse.error();
+    return NextResponse.json(
+      { message: "An error occurred." },
+      { status: 500 }
+    );
   }
 
   const { listingId } = params;

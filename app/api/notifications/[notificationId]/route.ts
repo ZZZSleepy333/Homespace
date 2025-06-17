@@ -10,7 +10,10 @@ export async function PATCH(request: Request, { params }: { params: IParams }) {
   const currentUser = await getCurrentUser();
 
   if (!currentUser) {
-    return NextResponse.error();
+    return NextResponse.json(
+      { message: "An error occurred." },
+      { status: 500 }
+    );
   }
 
   const { notificationId } = params;
@@ -33,7 +36,10 @@ export async function PATCH(request: Request, { params }: { params: IParams }) {
       !existingNotification ||
       existingNotification.userId !== currentUser.id
     ) {
-      return NextResponse.error();
+      return NextResponse.json(
+        { message: "An error occurred." },
+        { status: 500 }
+      );
     }
 
     const notification = await prisma.notification.update({
@@ -48,7 +54,10 @@ export async function PATCH(request: Request, { params }: { params: IParams }) {
     return NextResponse.json(notification);
   } catch (error) {
     console.error("Error updating notification:", error);
-    return NextResponse.error();
+    return NextResponse.json(
+      { message: "An error occurred." },
+      { status: 500 }
+    );
   }
 }
 
@@ -59,7 +68,10 @@ export async function DELETE(
   const currentUser = await getCurrentUser();
 
   if (!currentUser) {
-    return NextResponse.error();
+    return NextResponse.json(
+      { message: "An error occurred." },
+      { status: 500 }
+    );
   }
 
   const { notificationId } = params;
@@ -79,7 +91,10 @@ export async function DELETE(
       !existingNotification ||
       existingNotification.userId !== currentUser.id
     ) {
-      return NextResponse.error();
+      return NextResponse.json(
+        { message: "An error occurred." },
+        { status: 500 }
+      );
     }
 
     await prisma.notification.delete({
@@ -91,6 +106,9 @@ export async function DELETE(
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Error deleting notification:", error);
-    return NextResponse.error();
+    return NextResponse.json(
+      { message: "An error occurred." },
+      { status: 500 }
+    );
   }
 }

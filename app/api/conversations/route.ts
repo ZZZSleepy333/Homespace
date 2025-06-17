@@ -6,7 +6,10 @@ export async function GET(request: Request) {
   const currentUser = await getCurrentUser();
 
   if (!currentUser) {
-    return NextResponse.error();
+    return NextResponse.json(
+      { message: "An error occurred." },
+      { status: 500 }
+    );
   }
 
   try {
@@ -49,7 +52,6 @@ export async function GET(request: Request) {
       },
     });
 
-
     const conversationsWithParticipants = await Promise.all(
       conversations.map(async (conversation) => {
         const otherParticipantId = conversation.participantIds.find(
@@ -78,7 +80,9 @@ export async function GET(request: Request) {
     return NextResponse.json(conversationsWithParticipants);
   } catch (error) {
     console.error("Error fetching conversations:", error);
-    return NextResponse.error();
+    return NextResponse.json(
+      { message: "An error occurred." },
+      { status: 500 }
+    );
   }
 }
-

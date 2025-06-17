@@ -14,7 +14,10 @@ export async function DELETE(
   const currentUser = await getCurrentUser();
 
   if (!currentUser) {
-    return NextResponse.error();
+    return NextResponse.json(
+      { message: "An error occurred." },
+      { status: 500 }
+    );
   }
 
   const { reservationId } = params;

@@ -6,14 +6,20 @@ export async function POST(request: Request) {
   const currentUser = await getCurrentUser();
 
   if (!currentUser) {
-    return NextResponse.error();
+    return NextResponse.json(
+      { message: "An error occurred." },
+      { status: 500 }
+    );
   }
 
   const body = await request.json();
   const { content, conversationId, receiverId, reservationId } = body;
 
   if (!content || (!conversationId && !receiverId)) {
-    return NextResponse.error();
+    return NextResponse.json(
+      { message: "An error occurred." },
+      { status: 500 }
+    );
   }
 
   try {
@@ -53,7 +59,10 @@ export async function POST(request: Request) {
     }
 
     if (!conversation) {
-      return NextResponse.error();
+      return NextResponse.json(
+        { message: "An error occurred." },
+        { status: 500 }
+      );
     }
 
     const message = await prisma.message.create({
@@ -154,7 +163,10 @@ export async function POST(request: Request) {
     return NextResponse.json(message);
   } catch (error) {
     console.error("Error creating message:", error);
-    return NextResponse.error();
+    return NextResponse.json(
+      { message: "An error occurred." },
+      { status: 500 }
+    );
   }
 }
 
@@ -162,7 +174,10 @@ export async function GET(request: Request) {
   const currentUser = await getCurrentUser();
 
   if (!currentUser) {
-    return NextResponse.error();
+    return NextResponse.json(
+      { message: "An error occurred." },
+      { status: 500 }
+    );
   }
 
   try {
@@ -171,7 +186,10 @@ export async function GET(request: Request) {
     const receiverId = searchParams.get("receiverId");
 
     if (!conversationId && !receiverId) {
-      return NextResponse.error();
+      return NextResponse.json(
+        { message: "An error occurred." },
+        { status: 500 }
+      );
     }
 
     let conversation;
@@ -227,6 +245,9 @@ export async function GET(request: Request) {
     return NextResponse.json(conversation?.messages || []);
   } catch (error) {
     console.error("Error fetching messages:", error);
-    return NextResponse.error();
+    return NextResponse.json(
+      { message: "An error occurred." },
+      { status: 500 }
+    );
   }
 }

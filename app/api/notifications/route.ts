@@ -6,7 +6,10 @@ export async function GET(request: Request) {
   const currentUser = await getCurrentUser();
 
   if (!currentUser) {
-    return NextResponse.error();
+    return NextResponse.json(
+      { message: "An error occurred." },
+      { status: 500 }
+    );
   }
 
   try {
@@ -23,7 +26,10 @@ export async function GET(request: Request) {
     return NextResponse.json(notifications);
   } catch (error) {
     console.error("Error fetching notifications:", error);
-    return NextResponse.error();
+    return NextResponse.json(
+      { message: "An error occurred." },
+      { status: 500 }
+    );
   }
 }
 
@@ -31,7 +37,10 @@ export async function POST(request: Request) {
   const currentUser = await getCurrentUser();
 
   if (!currentUser) {
-    return NextResponse.error();
+    return NextResponse.json(
+      { message: "An error occurred." },
+      { status: 500 }
+    );
   }
 
   try {
@@ -39,7 +48,10 @@ export async function POST(request: Request) {
     const { userId, type, title, message, data } = body;
 
     if (!userId || !type || !title || !message) {
-      return NextResponse.error();
+      return NextResponse.json(
+        { message: "An error occurred." },
+        { status: 500 }
+      );
     }
 
     const notification = await prisma.notification.create({
@@ -55,6 +67,9 @@ export async function POST(request: Request) {
     return NextResponse.json(notification);
   } catch (error) {
     console.error("Error creating notification:", error);
-    return NextResponse.error();
+    return NextResponse.json(
+      { message: "An error occurred." },
+      { status: 500 }
+    );
   }
 }
