@@ -58,10 +58,7 @@ export async function PUT(request: Request, { params }: { params: IParams }) {
     const currentUser = await getCurrentUser();
 
     if (!currentUser) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const { listingId } = params;
@@ -80,29 +77,34 @@ export async function PUT(request: Request, { params }: { params: IParams }) {
     } = body;
 
     if (!listingId || typeof listingId !== "string") {
-      return NextResponse.json(
-        { error: "Invalid ID" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
     }
 
-    
-    if (!title || !description || !category || !roomCount || 
-        !bathroomCount || !guestCount || !location || !price) {
+    if (
+      !title ||
+      !description ||
+      !category ||
+      !roomCount ||
+      !bathroomCount ||
+      !guestCount ||
+      !location ||
+      !price
+    ) {
       return NextResponse.json(
         { error: "Missing required fields" },
         { status: 400 }
       );
     }
 
-   
-    if (!Array.isArray(imageSrc) || !imageSrc.every(url => typeof url === 'string')) {
+    if (
+      !Array.isArray(imageSrc) ||
+      !imageSrc.every((url) => typeof url === "string")
+    ) {
       return NextResponse.json(
         { error: "imageSrc must be an array of strings" },
         { status: 400 }
       );
     }
-
 
     if (imageSrc.length === 0) {
       return NextResponse.json(
@@ -117,7 +119,6 @@ export async function PUT(request: Request, { params }: { params: IParams }) {
         { status: 400 }
       );
     }
-
 
     const existingListing = await prisma.listing.findFirst({
       where: {
@@ -153,7 +154,7 @@ export async function PUT(request: Request, { params }: { params: IParams }) {
 
     return NextResponse.json(updatedListing);
   } catch (error) {
-    console.error('Error updating listing:', error);
+    console.error("Error updating listing:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }
