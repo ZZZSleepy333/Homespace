@@ -71,7 +71,6 @@ const ListingClient: React.FC<ListingClientProps> = ({
       return;
     }
 
-    // Redirect to payment page with booking details
     const searchParams = new URLSearchParams({
       listingId: listing?.id || "",
       startDate: dateRange.startDate.toISOString(),

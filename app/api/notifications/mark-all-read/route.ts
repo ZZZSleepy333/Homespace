@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import prisma from "@/app/libs/prismadb";
 import getCurrentUser from "@/app/actions/getCurrentUser";
 
-// PATCH - Mark all notifications as read
 export async function PATCH(request: Request) {
   const currentUser = await getCurrentUser();
 
@@ -27,4 +26,3 @@ export async function PATCH(request: Request) {
     return NextResponse.error();
   }
 }
-

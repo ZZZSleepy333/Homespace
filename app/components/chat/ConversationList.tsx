@@ -72,7 +72,6 @@ const ConversationList: React.FC<ConversationListProps> = ({
     if (diffInHours < 24) {
       return format(date, "HH:mm");
     } else if (diffInHours < 168) {
-      // 7 days
       return format(date, "EEE");
     } else {
       return format(date, "MMM dd");
@@ -83,7 +82,7 @@ const ConversationList: React.FC<ConversationListProps> = ({
     <div className="space-y-1">
       {conversations.map((conversation) => {
         const isSelected = selectedConversation?.id === conversation.id;
-        const hasUnread = false; // TODO: Implement unread logic
+        const hasUnread = false;
 
         return (
           <div

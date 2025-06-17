@@ -154,8 +154,6 @@ const RentModal = () => {
     </div>
   );
 
-  // Location step removed
-
   if (step === STEPS.IMAGES) {
     bodyContent = (
       <div className="flex flex-col gap-8">

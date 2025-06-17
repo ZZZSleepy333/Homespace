@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import prisma from "@/app/libs/prismadb";
 import getCurrentUser from "@/app/actions/getCurrentUser";
 
-// GET - Fetch user notifications
 export async function GET(request: Request) {
   const currentUser = await getCurrentUser();
 
@@ -18,7 +17,7 @@ export async function GET(request: Request) {
       orderBy: {
         createdAt: "desc",
       },
-      take: 50, // Limit to 50 most recent notifications
+      take: 50,
     });
 
     return NextResponse.json(notifications);
@@ -28,7 +27,6 @@ export async function GET(request: Request) {
   }
 }
 
-// POST - Create new notification
 export async function POST(request: Request) {
   const currentUser = await getCurrentUser();
 
@@ -54,13 +52,9 @@ export async function POST(request: Request) {
       },
     });
 
-    // Emit real-time notification via Socket.IO
-    // This would be handled by the Socket.IO server
-    
     return NextResponse.json(notification);
   } catch (error) {
     console.error("Error creating notification:", error);
     return NextResponse.error();
   }
 }
-

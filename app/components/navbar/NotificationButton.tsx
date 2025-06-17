@@ -39,7 +39,6 @@ const NotificationButton: React.FC<NotificationButtonProps> = ({
     deleteNotification,
   } = useNotifications(currentUser?.id);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -61,15 +60,12 @@ const NotificationButton: React.FC<NotificationButtonProps> = ({
       markAsRead(notification.id);
     }
 
-    // Handle notification actions based on type
     if (notification.type === "message" && notification.data?.conversationId) {
-      // Open chat modal or navigate to conversation
       console.log("Open conversation:", notification.data.conversationId);
     } else if (
       notification.type === "booking" &&
       notification.data?.reservationId
     ) {
-      // Navigate to booking details
       console.log("Open booking:", notification.data.reservationId);
     }
   };

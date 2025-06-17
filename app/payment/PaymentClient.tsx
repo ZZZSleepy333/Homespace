@@ -51,12 +51,11 @@ const PaymentClient: React.FC<PaymentClientProps> = ({
     setValue,
   } = useForm<FieldValues>({
     defaultValues: {
-      // Guest Information
       firstName: currentUser.name?.split(" ")[0] || "",
       lastName: currentUser.name?.split(" ").slice(1).join(" ") || "",
       email: currentUser.email || "",
       phone: "",
-      // Billing Information
+
       billingFirstName: currentUser.name?.split(" ")[0] || "",
       billingLastName: currentUser.name?.split(" ").slice(1).join(" ") || "",
       billingAddress: "",
@@ -64,12 +63,12 @@ const PaymentClient: React.FC<PaymentClientProps> = ({
       billingState: "",
       billingZip: "",
       billingCountry: "",
-      // Payment Information
+
       cardNumber: "",
       expiryDate: "",
       cvv: "",
       cardHolderName: "",
-      // Special Requests
+
       specialRequests: "",
       arrivalTime: "",
       guestCount: 1,
@@ -86,7 +85,6 @@ const PaymentClient: React.FC<PaymentClientProps> = ({
       setIsLoading(true);
 
       try {
-        // First create the reservation
         const reservationResponse = await axios.post("/api/reservations", {
           listingId: listing.id,
           startDate: reservationData.startDate,

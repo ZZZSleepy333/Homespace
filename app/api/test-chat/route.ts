@@ -20,10 +20,8 @@ export async function POST(request: Request) {
       );
     }
 
-    // Test creating a conversation and sending an automatic message
     const participantIds = [currentUser.id, hostId].sort();
 
-    // Check if conversation already exists
     let conversation = await prisma.conversation.findFirst({
       where: {
         AND: [
@@ -33,12 +31,10 @@ export async function POST(request: Request) {
       },
     });
 
-    // Đảm bảo chỉ lấy conversation có đúng 2 participant
     if (conversation && conversation.participantIds.length !== 2) {
       conversation = null;
     }
 
-    // Create new conversation if it doesn't exist
     if (!conversation) {
       conversation = await prisma.conversation.create({
         data: {
@@ -49,7 +45,6 @@ export async function POST(request: Request) {
       });
     }
 
-    // Create automatic welcome message
     const automaticMessage = `Hi! I just completed my booking for "${listingTitle}". Looking forward to my stay! 🏠✨`;
 
     if (!conversation) {
@@ -80,7 +75,6 @@ export async function POST(request: Request) {
       },
     });
 
-    // Update conversation's last message timestamp
     await prisma.conversation.update({
       where: {
         id: conversation.id,

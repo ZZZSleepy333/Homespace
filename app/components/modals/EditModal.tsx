@@ -68,7 +68,6 @@ const EditModal = () => {
     },
   });
 
-  // Fetch listing data when modal opens
   useEffect(() => {
     if (editModal.listingId) {
       setIsLoading(true);
@@ -78,7 +77,6 @@ const EditModal = () => {
           const listingData = response.data;
           setListing(listingData);
 
-          // Set form values from listing data
           setValue("category", listingData.category);
           setValue("location", {
             value: listingData.locationValue,
@@ -142,7 +140,6 @@ const EditModal = () => {
       return onNext();
     }
 
-    // Make sure amenities is an array
     if (!data.amenities) {
       data.amenities = [];
     }

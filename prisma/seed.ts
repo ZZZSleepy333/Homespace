@@ -240,7 +240,6 @@ async function main() {
     },
   });
 
-  // Update conversation lastMessageAt
   await prisma.conversation.update({
     where: { id: conversation1.id },
     data: { lastMessageAt: new Date(Date.now() - 1 * 60 * 60 * 1000) },

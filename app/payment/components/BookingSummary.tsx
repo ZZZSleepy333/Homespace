@@ -31,8 +31,8 @@ const BookingSummary: React.FC<BookingSummaryProps> = ({
   );
 
   const basePrice = listing.price * numberOfNights;
-  const serviceFee = Math.round(basePrice * 0.14); // 14% service fee
-  const taxes = Math.round(basePrice * 0.08); // 8% taxes
+  const serviceFee = Math.round(basePrice * 0.14);
+  const taxes = Math.round(basePrice * 0.08);
   const totalPrice = basePrice + serviceFee + taxes;
 
   return (

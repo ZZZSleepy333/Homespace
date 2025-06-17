@@ -20,14 +20,12 @@ export async function POST(request: Request) {
     let conversation;
 
     if (conversationId) {
-      // Find existing conversation
       conversation = await prisma.conversation.findUnique({
         where: {
           id: conversationId,
         },
       });
     } else {
-      // Check if conversation already exists between these participants
       const participantIds = [currentUser.id, receiverId].sort();
 
       conversation = await prisma.conversation.findFirst({
@@ -39,13 +37,11 @@ export async function POST(request: Request) {
         },
       });
 
-      // Đảm bảo chỉ lấy conversation có đúng 2 participant
       if (conversation && conversation.participantIds.length !== 2) {
         conversation = null;
       }
     }
 
-    // Create the message
     if (!conversation) {
       conversation = await prisma.conversation.create({
         data: {
@@ -60,7 +56,6 @@ export async function POST(request: Request) {
       return NextResponse.error();
     }
 
-    // Create the message
     const message = await prisma.message.create({
       data: {
         content,
@@ -79,11 +74,9 @@ export async function POST(request: Request) {
       },
     });
 
-    // Get conversation participants
     const participants = conversation.participantIds;
     const otherParticipantId = participants.find((id) => id !== currentUser.id);
 
-    // Get listing information for context
     let listingTitle = "Unknown Property";
     if (conversation.reservationId) {
       const reservation = await prisma.reservation.findUnique({
@@ -93,7 +86,6 @@ export async function POST(request: Request) {
       listingTitle = reservation?.listing?.title || listingTitle;
     }
 
-    // Update conversation's last message timestamp
     await prisma.conversation.update({
       where: {
         id: conversation.id,
@@ -103,7 +95,6 @@ export async function POST(request: Request) {
       },
     });
 
-    // Create notification for the other participant
     if (otherParticipantId) {
       await prisma.notification.create({
         data: {
@@ -123,10 +114,7 @@ export async function POST(request: Request) {
       });
     }
 
-    // Emit real-time events via Socket.IO
     try {
-      // Đảm bảo không còn import NextApiResponseServerIO
-      // Khai báo globalAny: any = globalThis để tránh lỗi TypeScript
       const globalAny: any = globalThis;
       if (globalAny.ioServer) {
         globalAny.ioServer

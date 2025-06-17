@@ -30,8 +30,13 @@ const BillingInformation: React.FC<BillingInformationProps> = ({
 
   const handleSameAsGuest = (checked: boolean) => {
     setSameAsGuest(checked);
-    // This would need to be implemented with setValue if you want to auto-fill
-    // For now, it's just a visual indicator
+    if (checked) {
+      register("billingFirstName").onChange({ target: { value: firstName } });
+      register("billingLastName").onChange({ target: { value: lastName } });
+    } else {
+      register("billingFirstName").onChange({ target: { value: "" } });
+      register("billingLastName").onChange({ target: { value: "" } });
+    }
   };
 
   return (

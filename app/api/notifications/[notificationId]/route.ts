@@ -6,11 +6,7 @@ interface IParams {
   notificationId?: string;
 }
 
-// PATCH - Update notification (mark as read)
-export async function PATCH(
-  request: Request,
-  { params }: { params: IParams }
-) {
+export async function PATCH(request: Request, { params }: { params: IParams }) {
   const currentUser = await getCurrentUser();
 
   if (!currentUser) {
@@ -27,14 +23,16 @@ export async function PATCH(
     const body = await request.json();
     const { read } = body;
 
-    // Verify the notification belongs to the current user
     const existingNotification = await prisma.notification.findUnique({
       where: {
         id: notificationId,
       },
     });
 
-    if (!existingNotification || existingNotification.userId !== currentUser.id) {
+    if (
+      !existingNotification ||
+      existingNotification.userId !== currentUser.id
+    ) {
       return NextResponse.error();
     }
 
@@ -54,7 +52,6 @@ export async function PATCH(
   }
 }
 
-// DELETE - Delete notification
 export async function DELETE(
   request: Request,
   { params }: { params: IParams }
@@ -72,14 +69,16 @@ export async function DELETE(
   }
 
   try {
-    // Verify the notification belongs to the current user
     const existingNotification = await prisma.notification.findUnique({
       where: {
         id: notificationId,
       },
     });
 
-    if (!existingNotification || existingNotification.userId !== currentUser.id) {
+    if (
+      !existingNotification ||
+      existingNotification.userId !== currentUser.id
+    ) {
       return NextResponse.error();
     }
 
@@ -95,4 +94,3 @@ export async function DELETE(
     return NextResponse.error();
   }
 }
-

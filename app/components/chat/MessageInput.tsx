@@ -58,21 +58,10 @@ const MessageInput: React.FC<MessageInputProps> = ({
     adjustTextareaHeight();
   }, [message]);
 
-  const handleEmojiClick = () => {
-    // TODO: Implement emoji picker
-    console.log("Emoji picker not implemented yet");
-  };
-
-  const handleAttachmentClick = () => {
-    // TODO: Implement file attachment
-    console.log("File attachment not implemented yet");
-  };
-
   return (
     <form onSubmit={handleSubmit} className="flex items-end space-x-3">
       <button
         type="button"
-        onClick={handleAttachmentClick}
         disabled={disabled}
         className="
           p-2 text-gray-500 hover:text-gray-700 disabled:opacity-50 
@@ -111,7 +100,6 @@ const MessageInput: React.FC<MessageInputProps> = ({
 
           <button
             type="button"
-            onClick={handleEmojiClick}
             disabled={disabled}
             className="
               ml-2 p-1 text-gray-500 hover:text-gray-700 disabled:opacity-50 

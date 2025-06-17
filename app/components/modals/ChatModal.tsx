@@ -82,7 +82,6 @@ const ChatModal: React.FC<ChatModalProps> = ({ currentUser }) => {
     formState: { errors },
   } = useForm<FieldValues>();
 
-  // Scroll to bottom of messages
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -91,30 +90,25 @@ const ChatModal: React.FC<ChatModalProps> = ({ currentUser }) => {
     scrollToBottom();
   }, [messages]);
 
-  // Fetch conversations when modal opens
   useEffect(() => {
     if (chatModal.isOpen && currentUser) {
       fetchConversations();
     }
   }, [chatModal.isOpen, currentUser]);
 
-  // Auto-create conversation if coming from payment with host info
   useEffect(() => {
     if (chatModal.isOpen && chatModal.hostId && currentUser) {
       createConversationWithHost();
     }
   }, [chatModal.isOpen, chatModal.hostId, currentUser]);
 
-  // Set up real-time message listening
   useEffect(() => {
     if (!currentUser) return;
 
     const cleanupMessage = onNewMessage(
       (newMessage: Message & { conversationId: string }) => {
-        // Only update if the message is for the currently selected conversation
         if (selectedConversation?.id === newMessage.conversationId) {
           setMessages((prev) => {
-            // Avoid duplicate messages
             const exists = prev.some((msg) => msg.id === newMessage.id);
             if (!exists) {
               return [...prev, newMessage];
@@ -123,7 +117,6 @@ const ChatModal: React.FC<ChatModalProps> = ({ currentUser }) => {
           });
         }
 
-        // Update conversation list with latest message
         setConversations((prev) =>
           prev.map((conv) =>
             conv.id === newMessage.conversationId
@@ -159,7 +152,6 @@ const ChatModal: React.FC<ChatModalProps> = ({ currentUser }) => {
     };
   }, [currentUser, selectedConversation?.id, onNewMessage, onTyping]);
 
-  // Join/leave conversation rooms when selection changes
   useEffect(() => {
     if (selectedConversation?.id) {
       joinConversation(selectedConversation.id);
@@ -188,7 +180,6 @@ const ChatModal: React.FC<ChatModalProps> = ({ currentUser }) => {
     try {
       setIsLoading(true);
 
-      // Send initial booking confirmation message
       const initialMessage = `Hi! I just completed my booking for "${chatModal.listingTitle}". Looking forward to my stay! 🏠✨`;
 
       const response = await axios.post("/api/messages", {
@@ -197,7 +188,6 @@ const ChatModal: React.FC<ChatModalProps> = ({ currentUser }) => {
         reservationId: chatModal.reservationId,
       });
 
-      // Refresh conversations to show the new one
       await fetchConversations();
 
       toast.success("Message sent to host!");
@@ -240,7 +230,6 @@ const ChatModal: React.FC<ChatModalProps> = ({ currentUser }) => {
         },
       };
 
-      // Optimistically add message
       setMessages((prev) => [...prev, tempMessage]);
       setMessageText("");
 
@@ -249,12 +238,10 @@ const ChatModal: React.FC<ChatModalProps> = ({ currentUser }) => {
         conversationId: selectedConversation.id,
       });
 
-      // Replace temp message with real one
       setMessages((prev) =>
         prev.map((msg) => (msg.id === tempMessage.id ? response.data : msg))
       );
 
-      // Update conversations list
       setConversations((prev) =>
         prev.map((conv) =>
           conv.id === selectedConversation.id
@@ -267,7 +254,6 @@ const ChatModal: React.FC<ChatModalProps> = ({ currentUser }) => {
         )
       );
     } catch (error) {
-      // Remove temp message on error
       setMessages((prev) => prev.filter((msg) => !msg.id.startsWith("temp-")));
       console.error("Error sending message:", error);
       toast.error("Failed to send message");
