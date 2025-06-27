@@ -190,7 +190,7 @@ const AdvancedSearch = () => {
 
   return (
     <Container>
-      <div className="flex flex-col gap-4 mt-4">
+      <div className="flex flex-col gap-4 mt-4 relative">
         <div className="flex flex-col md:flex-row gap-4">
           <div className="flex-1 -z-20">
             <SearchInput
@@ -219,58 +219,67 @@ const AdvancedSearch = () => {
         </div>
 
         {showFilters && (
-          <div className="flex flex-col gap-6 p-4 bg-white rounded-lg shadow-md absolute w-full z-50">
-            <div className="flex flex-col gap-3">
-              <h3 className="text-lg font-semibold text-gray-800">
-                Categories
-              </h3>
-              <div className="flex flex-row items-center justify-start overflow-x-auto gap-2 pb-2">
-                {categories.map((item) => (
-                  <CategoryBox
-                    key={item.label}
-                    label={item.label}
-                    icon={item.icon}
-                    selected={category === item.label}
-                  />
-                ))}
+          <>
+            <div
+              className="fixed inset-0 z-40 bg-black/10"
+              onClick={() => setShowFilters(false)}
+            />
+
+            <div className="flex flex-col gap-6 p-4 bg-white rounded-lg shadow-md w-full max-w-4xl mx-auto left-0 right-0 absolute top-full mt-2 z-50 border border-gray-200 overflow-auto max-h-[70vh]">
+              <div className="flex flex-col gap-3">
+                <h3 className="text-lg font-semibold text-gray-800">
+                  Categories
+                </h3>
+                <div className="flex flex-row items-center justify-start overflow-x-auto gap-2 pb-2">
+                  {categories.map((item) => (
+                    <CategoryBox
+                      key={item.label}
+                      label={item.label}
+                      icon={item.icon}
+                      selected={category === item.label}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-3">
+                <h3 className="text-lg font-semibold text-gray-800">
+                  Amenities
+                </h3>
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                  {amenities.map((amenity) => (
+                    <div
+                      key={amenity}
+                      className={`
+                        flex items-center gap-2 p-3 rounded-lg cursor-pointer
+                        transition-all duration-200
+                        ${
+                          selectedAmenities.includes(amenity)
+                            ? "bg-rose-500 text-white shadow-md"
+                            : "bg-gray-50 hover:bg-gray-100 hover:shadow-sm"
+                        }
+                      `}
+                      onClick={() => {
+                        const newAmenities = selectedAmenities.includes(amenity)
+                          ? selectedAmenities.filter((a) => a !== amenity)
+                          : [...selectedAmenities, amenity];
+
+                        if (params) {
+                          const searchParams = new URLSearchParams(
+                            params.toString()
+                          );
+                          searchParams.set("amenities", newAmenities.join(","));
+                          router.push(`/?${searchParams.toString()}`);
+                        }
+                      }}
+                    >
+                      <span className="text-sm font-medium">{amenity}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
-
-            <div className="flex flex-col gap-3">
-              <h3 className="text-lg font-semibold text-gray-800">Amenities</h3>
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-                {amenities.map((amenity) => (
-                  <div
-                    key={amenity}
-                    className={`
-                      flex items-center gap-2 p-3 rounded-lg cursor-pointer
-                      transition-all duration-200
-                      ${
-                        selectedAmenities.includes(amenity)
-                          ? "bg-rose-500 text-white shadow-md"
-                          : "bg-gray-50 hover:bg-gray-100 hover:shadow-sm"
-                      }
-                    `}
-                    onClick={() => {
-                      const newAmenities = selectedAmenities.includes(amenity)
-                        ? selectedAmenities.filter((a) => a !== amenity)
-                        : [...selectedAmenities, amenity];
-
-                      if (params) {
-                        const searchParams = new URLSearchParams(
-                          params.toString()
-                        );
-                        searchParams.set("amenities", newAmenities.join(","));
-                        router.push(`/?${searchParams.toString()}`);
-                      }
-                    }}
-                  >
-                    <span className="text-sm font-medium">{amenity}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+          </>
         )}
       </div>
     </Container>

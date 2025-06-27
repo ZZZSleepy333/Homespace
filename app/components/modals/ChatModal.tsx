@@ -18,6 +18,7 @@ import Button from "../Button";
 import ConversationList from "../chat/ConversationList";
 import MessageList from "../chat/MessageList";
 import MessageInput from "../chat/MessageInput";
+import TypingIndicator from "../chat/TypingIndicator";
 
 interface ChatModalProps {
   currentUser?: SafeUser | null;
@@ -71,6 +72,8 @@ const ChatModal: React.FC<ChatModalProps> = ({ currentUser }) => {
     isConnected,
     joinConversation,
     leaveConversation,
+    emitTypingStart,
+    emitTypingStop,
     onNewMessage,
     onTyping,
   } = useSocket(currentUser?.id);
@@ -331,22 +334,42 @@ const ChatModal: React.FC<ChatModalProps> = ({ currentUser }) => {
                   <MessageList
                     messages={messages}
                     currentUserId={currentUser?.id}
+                    typingUsers={typingUsers}
+                    participantImages={{
+                      [selectedConversation.otherParticipant.id]: selectedConversation.otherParticipant.image
+                    }}
                   />
 
-                  {Object.keys(typingUsers).length > 0 && (
-                    <div className="px-4 py-2 text-sm text-gray-500 italic">
-                      {Object.values(typingUsers).join(", ")}{" "}
-                      {Object.keys(typingUsers).length === 1 ? "is" : "are"}{" "}
-                      typing...
-                    </div>
-                  )}
+                  <TypingIndicator 
+                    typingUsers={typingUsers}
+                    participantImages={{
+                      [selectedConversation.otherParticipant.id]: selectedConversation.otherParticipant.image
+                    }}
+                  />
                 </>
               )}
               <div ref={messagesEndRef} />
             </div>
 
             <div className="p-4 border-t border-gray-200">
-              <MessageInput onSendMessage={sendMessage} disabled={isLoading} />
+              <MessageInput 
+                onSendMessage={sendMessage} 
+                disabled={isLoading}
+                onTypingStart={() => {
+                  if (selectedConversation && currentUser) {
+                    emitTypingStart(
+                      selectedConversation.id,
+                      currentUser.id,
+                      currentUser.name || 'Unknown User'
+                    );
+                  }
+                }}
+                onTypingStop={() => {
+                  if (selectedConversation && currentUser) {
+                    emitTypingStop(selectedConversation.id, currentUser.id);
+                  }
+                }}
+              />
             </div>
           </>
         ) : (

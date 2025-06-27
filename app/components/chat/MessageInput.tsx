@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { IoSend } from "react-icons/io5";
 import { BsEmojiSmile } from "react-icons/bs";
 import { MdAttachment } from "react-icons/md";
@@ -9,20 +9,55 @@ interface MessageInputProps {
   onSendMessage: (content: string) => void;
   disabled?: boolean;
   placeholder?: string;
+  onTypingStart?: () => void;
+  onTypingStop?: () => void;
 }
 
 const MessageInput: React.FC<MessageInputProps> = ({
   onSendMessage,
   disabled = false,
   placeholder = "Type a message...",
+  onTypingStart,
+  onTypingStop,
 }) => {
   const [message, setMessage] = useState("");
   const [isComposing, setIsComposing] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const handleTyping = useCallback(() => {
+    if (!isTyping && onTypingStart) {
+      setIsTyping(true);
+      onTypingStart();
+    }
+
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
+
+    typingTimeoutRef.current = setTimeout(() => {
+      if (isTyping && onTypingStop) {
+        setIsTyping(false);
+        onTypingStop();
+      }
+    }, 2000);
+  }, [isTyping, onTypingStart, onTypingStop]);
+
+  const stopTyping = useCallback(() => {
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
+    if (isTyping && onTypingStop) {
+      setIsTyping(false);
+      onTypingStop();
+    }
+  }, [isTyping, onTypingStop]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (message.trim() && !disabled) {
+      stopTyping(); // Stop typing when sending message
       onSendMessage(message.trim());
       setMessage("");
       resetTextareaHeight();
@@ -46,7 +81,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
       const scrollHeight = textareaRef.current.scrollHeight;
-      const maxHeight = 120; // Equivalent to roughly 5 lines
+      const maxHeight = 120;
       textareaRef.current.style.height = `${Math.min(
         scrollHeight,
         maxHeight
@@ -57,6 +92,25 @@ const MessageInput: React.FC<MessageInputProps> = ({
   useEffect(() => {
     adjustTextareaHeight();
   }, [message]);
+
+  useEffect(() => {
+    return () => {
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const value = e.target.value;
+    setMessage(value);
+
+    if (value.trim() && onTypingStart) {
+      handleTyping();
+    } else if (!value.trim() && isTyping) {
+      stopTyping();
+    }
+  };
 
   return (
     <form onSubmit={handleSubmit} className="flex items-end space-x-3">
@@ -83,7 +137,7 @@ const MessageInput: React.FC<MessageInputProps> = ({
           <textarea
             ref={textareaRef}
             value={message}
-            onChange={(e) => setMessage(e.target.value)}
+            onChange={handleInputChange}
             onKeyDown={handleKeyDown}
             onCompositionStart={() => setIsComposing(true)}
             onCompositionEnd={() => setIsComposing(false)}

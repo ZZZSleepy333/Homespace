@@ -4,6 +4,7 @@ import { format, formatDistanceToNow, isToday, isYesterday } from "date-fns";
 import { useState } from "react";
 
 import Avatar from "../Avatar";
+import TypingBubble from "./TypingBubble";
 
 interface Message {
   id: string;
@@ -20,11 +21,15 @@ interface Message {
 interface MessageListProps {
   messages: Message[];
   currentUserId?: string;
+  typingUsers?: { [key: string]: string };
+  participantImages?: { [key: string]: string | null };
 }
 
 const MessageList: React.FC<MessageListProps> = ({
   messages,
   currentUserId,
+  typingUsers = {},
+  participantImages = {},
 }) => {
   const [selectedMessage, setSelectedMessage] = useState<string | null>(null);
 
@@ -181,6 +186,14 @@ const MessageList: React.FC<MessageListProps> = ({
           </div>
         );
       })}
+
+      {Object.entries(typingUsers).map(([userId, userName]) => (
+        <TypingBubble
+          key={userId}
+          userName={userName}
+          userImage={participantImages[userId]}
+        />
+      ))}
     </div>
   );
 };
