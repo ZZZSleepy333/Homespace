@@ -113,7 +113,9 @@ const ListingCard: React.FC<ListingCardProps> = ({
               group-hover:scale-110 
               transition
             "
-            src={Array.isArray(data.imageSrc) ? data.imageSrc[0] : data.imageSrc}
+            src={
+              Array.isArray(data.imageSrc) ? data.imageSrc[0] : data.imageSrc
+            }
             alt="Listing"
           />
           <div
@@ -126,9 +128,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
             <HeartButton listingId={data.id} currentUser={currentUser} />
           </div>
         </div>
-        <div className="font-semibold text-lg">
-          {location?.label}
-        </div>
+        <div className="font-semibold text-lg truncate">{data.title}</div>
         <div className="font-light text-neutral-500">
           {reservationDate || data.category}
         </div>
