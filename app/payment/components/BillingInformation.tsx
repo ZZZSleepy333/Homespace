@@ -119,36 +119,12 @@ const BillingInformation: React.FC<BillingInformationProps> = ({
         />
 
         <div className="space-y-2">
-          <select
-            {...register("billingCountry", { required: true })}
-            className={`w-full p-4 border-2 rounded-md outline-none transition ${
-              errors.billingCountry
-                ? "border-rose-500"
-                : "border-neutral-300 focus:border-black"
-            }`}
-          >
-            <option value="">Select country</option>
-            <option value="US">United States</option>
-            <option value="CA">Canada</option>
-            <option value="UK">United Kingdom</option>
-            <option value="AU">Australia</option>
-            <option value="DE">Germany</option>
-            <option value="FR">France</option>
-            <option value="ES">Spain</option>
-            <option value="IT">Italy</option>
-            <option value="JP">Japan</option>
-            <option value="KR">South Korea</option>
-            <option value="VN">Vietnam</option>
-            <option value="TH">Thailand</option>
-            <option value="SG">Singapore</option>
-            <option value="MY">Malaysia</option>
-            <option value="ID">Indonesia</option>
-            <option value="PH">Philippines</option>
-            <option value="IN">India</option>
-            <option value="CN">China</option>
-            <option value="BR">Brazil</option>
-            <option value="MX">Mexico</option>
-          </select>
+          <CountrySelect
+            value={watch("billingCountry")}
+            onChange={(value) =>
+              register("billingCountry").onChange({ target: { value } })
+            }
+          />
           {errors.billingCountry && (
             <span className="text-rose-500 text-sm">Country is required</span>
           )}

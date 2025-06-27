@@ -23,7 +23,7 @@ const CountrySelect: React.FC<CountrySelectProps> = ({ value, onChange }) => {
   return (
     <div>
       <Select
-        placeholder="Anywhere"
+        placeholder="Select a country"
         isClearable
         options={getAll()}
         value={value}

@@ -181,31 +181,33 @@ const PaymentClient: React.FC<PaymentClientProps> = ({
 
           <div className="flex items-center justify-between mb-8">
             {steps.map((step, index) => (
-              <div key={step.number} className="flex items-center">
-                <div
-                  className={`
-                    w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold
-                    ${
-                      currentStep >= step.number
-                        ? "bg-rose-500 text-white"
-                        : "bg-gray-200 text-gray-500"
-                    }
-                  `}
-                >
-                  {step.number}
-                </div>
-                <div className="ml-3 hidden md:block">
+              <>
+                <div key={step.number} className="flex items-center">
                   <div
-                    className={`text-sm font-medium ${
-                      currentStep >= step.number
-                        ? "text-rose-500"
-                        : "text-gray-500"
-                    }`}
+                    className={`
+                      w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold
+                      ${
+                        currentStep >= step.number
+                          ? "bg-rose-500 text-white"
+                          : "bg-gray-200 text-gray-500"
+                      }
+                    `}
                   >
-                    {step.title}
+                    {step.number}
                   </div>
-                  <div className="text-xs text-gray-500">
-                    {step.description}
+                  <div className="ml-3 hidden md:block">
+                    <div
+                      className={`text-sm font-medium ${
+                        currentStep >= step.number
+                          ? "text-rose-500"
+                          : "text-gray-500"
+                      }`}
+                    >
+                      {step.title}
+                    </div>
+                    <div className="text-xs text-gray-500">
+                      {step.description}
+                    </div>
                   </div>
                 </div>
                 {index < steps.length - 1 && (
@@ -215,7 +217,7 @@ const PaymentClient: React.FC<PaymentClientProps> = ({
                     }`}
                   />
                 )}
-              </div>
+              </>
             ))}
           </div>
 
@@ -298,7 +300,7 @@ const PaymentClient: React.FC<PaymentClientProps> = ({
                   </div>
                 )}
 
-                <div className="flex justify-between mt-8">
+                <div className="flex justify-between mt-8 space-x-4">
                   <Button
                     outline
                     label="Back"
